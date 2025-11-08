@@ -5,6 +5,38 @@ from datetime import datetime
 # 🔧 Page config
 st.set_page_config(page_title="Home", page_icon="👑", layout="wide")
 
+st.markdown("""
+<div style='background: linear-gradient(to right, #a2cf9b, #f7e9b7); padding: 1rem; border-radius: 10px; color: #333; text-align: center; font-weight: bold;'>
+  <h2>Welcome back, Bonga! 👑</h2>
+  <p>Leaving a Footprint of Excellence — Powered by JoyTee Holdings</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  animation: marquee 15s linear infinite;
+  font-size: 1.2rem;
+  color: #fff;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+<div class="marquee">
+  💬 Excellence is not a destination — it's a continuous journey. Your career is your kingdom. Build it with intention and integrity.
+</div>
+""", unsafe_allow_html=True)
+
 # 🎨 Welcome Banner
 st.markdown("""
 <div style='background: linear-gradient(to right, #6a11cb, #2575fc); padding: 1rem; border-radius: 10px; color: white; text-align: center;'>
