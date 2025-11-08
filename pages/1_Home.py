@@ -1,148 +1,125 @@
 import streamlit as st
-import random
-from datetime import datetime
+from components.quiz.quiz_card import render_quiz_card
+from components.quiz.quiz_results import render_quiz_results
+from components.journey.journey_timeline import render_journey_timeline
+from components.playbook.playbook_card import render_playbook_card
+from components.home.kingdom_quote_carousel import render_kingdom_quote
 
 # 🔧 Page config
-st.set_page_config(page_title="Home", page_icon="👑", layout="wide")
+st.set_page_config(page_title="JoyTee Academy", page_icon="👑", layout="wide")
 
-st.markdown("""
-<div style='background: linear-gradient(to right, #a2cf9b, #f7e9b7); padding: 1rem; border-radius: 10px; color: #333; text-align: center; font-weight: bold;'>
-  <h2>Welcome back, Bonga! 👑</h2>
-  <p>Leaving a Footprint of Excellence — Powered by JoyTee Holdings</p>
-</div>
-""", unsafe_allow_html=True)
-
+# 🌿 Branding Background
 st.markdown("""
 <style>
-.marquee {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  animation: marquee 15s linear infinite;
-  font-size: 1.2rem;
-  color: #fff;
-  background: linear-gradient(to right, #6a11cb, #2575fc);
-  padding: 0.75rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+body {
+    background: linear-gradient(to bottom right, #d4edda, #fdf6e3);
 }
-@keyframes marquee {
-  0%   { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+.main {
+    background-color: transparent;
 }
 </style>
-<div class="marquee">
-  💬 Excellence is not a destination — it's a continuous journey. Your career is your kingdom. Build it with intention and integrity.
-</div>
 """, unsafe_allow_html=True)
 
 # 🎨 Welcome Banner
 st.markdown("""
-<div style='background: linear-gradient(to right, #6a11cb, #2575fc); padding: 1rem; border-radius: 10px; color: white; text-align: center;'>
-  <h2>Welcome back, Bonga! 👑</h2>
-  <p>Building Your Kingdom of Excellence</p>
+<div style='background: linear-gradient(to right, #a2cf9b, #f7e9b7); padding: 1rem; border-radius: 10px; color: #333; text-align: center; font-weight: bold;'>
+  <h2>Welcome back, Bonga 👑</h2>
+  <p>Building Your Kingdom of Excellence — Powered by JoyTee Holdings</p>
 </div>
 """, unsafe_allow_html=True)
 
-# 🧠 Simulated user and progress data
-user = {"full_name": "Bonga Ngwenya"}
-quiz_progress = {"completed": True, "current_step": 7}
-journey = {
-    "milestones": [
-        {"completed": True, "title": "Completed CV", "completed_date": "2025-10-01", "id": 1},
-        {"completed": True, "title": "Updated LinkedIn", "completed_date": "2025-10-05", "id": 2},
-        {"completed": False, "title": "Scheduled Interview", "completed_date": None, "id": 3}
-    ],
-    "phase": "Growth"
+# 💬 Quote Carousel
+render_kingdom_quote()
+
+# 🎮 Career Progress
+st.markdown("### 🎮 Career Progress")
+st.progress(0.5, text="200 XP until level 3")
+st.write("Career Level: 2")
+st.write("Total XP: 200 / 400")
+
+# 🚀 Your Next Move
+st.markdown("### 🚀 Your Next Move")
+st.write("Let’s find your career phase and unlock your next step.")
+
+# 🧠 Quiz Section
+if "selected_answer" not in st.session_state:
+    st.session_state["selected_answer"] = None
+
+question = {
+    "id": "q1",
+    "question": "What motivates you most in your career?",
+    "options": [
+        {"label": "Growth & Learning", "value": "growth"},
+        {"label": "Stability & Security", "value": "stability"},
+        {"label": "Freedom & Flexibility", "value": "freedom"},
+        {"label": "Impact & Legacy", "value": "legacy"}
+    ]
 }
 
-# 💬 Motivational quotes
-motivational_quotes = [
-    "Excellence is not a destination, it's a continuous journey.",
-    "Your career is your kingdom—build it with intention and integrity.",
-    "Success is the sum of small efforts repeated day in and day out.",
-    "The future belongs to those who prepare for it today.",
-    "Your potential is limitless when you commit to growth."
-]
-quote = random.choice(motivational_quotes)
+results = {
+    "careerProfile": "visionary",
+    "recommendedPhase": "pivot",
+    "affirmation": "You were made for more — rise and reign.",
+    "topStrengths": ["Creative thinking", "Resilience", "Empathy"],
+    "recommendations": [
+        "Reflect on your values and redefine your goals.",
+        "Update your CV and LinkedIn to match your new direction.",
+        "Explore new industries or roles that align with your strengths."
+    ]
+}
 
-# 📈 XP and Level logic
-def calculate_level():
-    milestones_completed = sum(1 for m in journey["milestones"] if m["completed"])
-    quiz_completed = 1 if quiz_progress["completed"] else 0
-    return (milestones_completed + quiz_completed) // 2 + 1
+def handle_answer(question_id, answer_value):
+    st.session_state["selected_answer"] = answer_value
 
-def calculate_xp():
-    milestones_completed = sum(1 for m in journey["milestones"] if m["completed"])
-    quiz_xp = 100 if quiz_progress["completed"] else quiz_progress["current_step"] * 10
-    return milestones_completed * 50 + quiz_xp
+if st.session_state["selected_answer"] is None:
+    render_quiz_card(question, st.session_state["selected_answer"], handle_answer)
+else:
+    render_quiz_results(results)
 
-level = calculate_level()
-current_xp = calculate_xp()
-next_level_xp = level * 200
-xp_progress = int((current_xp / next_level_xp) * 100)
+# 🛤️ Journey Timeline
+st.markdown("### 🛤️ Your Journey")
+render_journey_timeline({
+    "milestones": [
+        {"title": "Completed Quiz", "completed": True},
+        {"title": "Defined Career Profile", "completed": True},
+        {"title": "Explored Playbook", "completed": False},
+        {"title": "Scheduled Coaching", "completed": False}
+    ]
+})
 
-# 🚀 Next best step logic
-def get_next_best_step():
-    if not quiz_progress or not quiz_progress["completed"]:
-        return {
-            "title": "Discover Your Career Path",
-            "description": "Take the 10-minute clarity quiz to unlock your profile",
-            "action": "Start Quiz",
-            "link": "Quiz"
-        }
-    if not journey or sum(1 for m in journey["milestones"] if m["completed"]) == 0:
-        return {
-            "title": "Begin Your Transformation",
-            "description": "Track your progress and earn rewards",
-            "action": "View Journey",
-            "link": "Journey"
-        }
-    return {
-        "title": "Master Career Skills",
-        "description": "Explore playbook modules and level up",
-        "action": "Open Playbook",
-        "link": "Playbook"
-    }
+# 📘 Playbook CTA
+render_playbook_card()
 
-next_step = get_next_best_step()
-
-# 🧭 Career Stats
-st.markdown("### 🎮 Career Progress")
-col1, col2 = st.columns([2, 1])
-with col1:
-    st.markdown(f"**Career Level:** `{level}`")
-    st.markdown(f"**Total XP:** `{current_xp} / {next_level_xp}`")
-    st.progress(xp_progress)
-    st.caption(f"{next_level_xp - current_xp} XP until level {level + 1}")
-with col2:
-    st.markdown(f"> 💬 *{quote}*")
-
-# 🚀 Next Best Step
-st.markdown("### 🚀 Your Next Move")
-st.info(f"**{next_step['title']}**\n\n{next_step['description']}")
-st.button(next_step["action"], on_click=lambda: st.switch_page(next_step["link"]))
-
-# 📊 Career Dashboard
-st.markdown("### 📊 Your Career Dashboard")
-cols = st.columns(3)
-with cols[0]:
-    milestones = sum(1 for m in journey["milestones"] if m["completed"])
-    st.metric("Milestones Achieved", milestones)
-    st.button("View Journey", on_click=lambda: st.switch_page("Journey"))
-with cols[1]:
-    st.metric("Current Phase", journey.get("phase", "Start"))
-    st.button("Continue", on_click=lambda: st.switch_page("Journey"))
-with cols[2]:
-    profile_strength = "100%" if quiz_progress["completed"] else "0%"
-    st.metric("Profile Complete", profile_strength)
-    st.button("Take Quiz" if not quiz_progress["completed"] else "Retake Quiz", on_click=lambda: st.switch_page("Quiz"))
-
-# 🏆 Recent Achievements
-completed_milestones = [m for m in journey["milestones"] if m["completed"]]
-if completed_milestones:
-    st.markdown("### 🏆 Recent Achievements")
-    for m in completed_milestones[:3]:
-        date = datetime.strptime(m["completed_date"], "%Y-%m-%d").strftime("%d %b %Y")
-        st.success(f"**{m['title']}** — Completed on {date} (+50 XP)")
+# 🔗 Top Navigation Buttons
+st.markdown("""
+<style>
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.gradient-button {
+    background: linear-gradient(to right, #a2cf9b, #f7e9b7);
+    color: #333;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.gradient-button:hover {
+    transform: scale(1.05);
+}
+</style>
+<div class="button-container">
+    <form action="pages/3_Journey.py"><button class="gradient-button">🛤️ Journey</button></form>
+    <form action="pages/4_Playbook.py"><button class="gradient-button">📘 Playbook</button></form>
+    <form action="pages/5_Profile.py"><button class="gradient-button">👤 Profile</button></form>
+    <form action="pages/6_Resources.py"><button class="gradient-button">📚 Resources</button></form>
+    <form action="pages/10_Contact.py"><button class="gradient-button">💬 Contact</button></form>
+</div>
+""", unsafe_allow_html=True)
