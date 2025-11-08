@@ -2,7 +2,18 @@ import streamlit as st
 import random
 from datetime import datetime
 
-# Simulated user and progress data (replace with real backend/API later)
+# 🔧 Page config
+st.set_page_config(page_title="Home", page_icon="👑", layout="wide")
+
+# 🎨 Welcome Banner
+st.markdown("""
+<div style='background: linear-gradient(to right, #6a11cb, #2575fc); padding: 1rem; border-radius: 10px; color: white; text-align: center;'>
+  <h2>Welcome back, Bonga! 👑</h2>
+  <p>Building Your Kingdom of Excellence</p>
+</div>
+""", unsafe_allow_html=True)
+
+# 🧠 Simulated user and progress data
 user = {"full_name": "Bonga Ngwenya"}
 quiz_progress = {"completed": True, "current_step": 7}
 journey = {
@@ -14,7 +25,7 @@ journey = {
     "phase": "Growth"
 }
 
-# Motivational quotes
+# 💬 Motivational quotes
 motivational_quotes = [
     "Excellence is not a destination, it's a continuous journey.",
     "Your career is your kingdom—build it with intention and integrity.",
@@ -24,7 +35,7 @@ motivational_quotes = [
 ]
 quote = random.choice(motivational_quotes)
 
-# XP and Level logic
+# 📈 XP and Level logic
 def calculate_level():
     milestones_completed = sum(1 for m in journey["milestones"] if m["completed"])
     quiz_completed = 1 if quiz_progress["completed"] else 0
@@ -40,7 +51,7 @@ current_xp = calculate_xp()
 next_level_xp = level * 200
 xp_progress = int((current_xp / next_level_xp) * 100)
 
-# Next best step logic
+# 🚀 Next best step logic
 def get_next_best_step():
     if not quiz_progress or not quiz_progress["completed"]:
         return {
@@ -65,46 +76,41 @@ def get_next_best_step():
 
 next_step = get_next_best_step()
 
-# Layout
-st.title(f"Welcome back, {user['full_name'].split()[0]}! 👑")
-st.subheader("Building Your Kingdom of Excellence")
+# 🧭 Career Stats
+st.markdown("### 🎮 Career Progress")
+col1, col2 = st.columns([2, 1])
+with col1:
+    st.markdown(f"**Career Level:** `{level}`")
+    st.markdown(f"**Total XP:** `{current_xp} / {next_level_xp}`")
+    st.progress(xp_progress)
+    st.caption(f"{next_level_xp - current_xp} XP until level {level + 1}")
+with col2:
+    st.markdown(f"> 💬 *{quote}*")
 
-# Gamification stats
-st.markdown(f"**Career Level:** {level}")
-st.markdown(f"**Total XP:** {current_xp} / {next_level_xp}")
-st.progress(xp_progress)
-st.caption(f"{next_level_xp - current_xp} XP until level {level + 1}")
-
-# Motivational quote
-st.markdown(f"> 💬 *{quote}*")
-
-# Next best step CTA
+# 🚀 Next Best Step
 st.markdown("### 🚀 Your Next Move")
 st.info(f"**{next_step['title']}**\n\n{next_step['description']}")
 st.button(next_step["action"], on_click=lambda: st.switch_page(next_step["link"]))
 
-# Career Dashboard
-st.markdown("## 📊 Your Career Dashboard")
+# 📊 Career Dashboard
+st.markdown("### 📊 Your Career Dashboard")
 cols = st.columns(3)
-
 with cols[0]:
     milestones = sum(1 for m in journey["milestones"] if m["completed"])
     st.metric("Milestones Achieved", milestones)
     st.button("View Journey", on_click=lambda: st.switch_page("Journey"))
-
 with cols[1]:
     st.metric("Current Phase", journey.get("phase", "Start"))
     st.button("Continue", on_click=lambda: st.switch_page("Journey"))
-
 with cols[2]:
     profile_strength = "100%" if quiz_progress["completed"] else "0%"
     st.metric("Profile Complete", profile_strength)
     st.button("Take Quiz" if not quiz_progress["completed"] else "Retake Quiz", on_click=lambda: st.switch_page("Quiz"))
 
-# Recent Achievements
+# 🏆 Recent Achievements
 completed_milestones = [m for m in journey["milestones"] if m["completed"]]
 if completed_milestones:
-    st.markdown("## 🏆 Recent Achievements")
+    st.markdown("### 🏆 Recent Achievements")
     for m in completed_milestones[:3]:
         date = datetime.strptime(m["completed_date"], "%Y-%m-%d").strftime("%d %b %Y")
         st.success(f"**{m['title']}** — Completed on {date} (+50 XP)")
